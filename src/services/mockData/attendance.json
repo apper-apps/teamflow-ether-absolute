@@ -1,0 +1,162 @@
+[
+  {
+    "Id": 1,
+    "employeeId": 1,
+    "date": "2024-01-15",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "present"
+  },
+  {
+    "Id": 2,
+    "employeeId": 2,
+    "date": "2024-01-15",
+    "checkIn": "09:15",
+    "checkOut": "17:45",
+    "status": "late"
+  },
+  {
+    "Id": 3,
+    "employeeId": 3,
+    "date": "2024-01-15",
+    "checkIn": "08:45",
+    "checkOut": "17:15",
+    "status": "present"
+  },
+  {
+    "Id": 4,
+    "employeeId": 4,
+    "date": "2024-01-15",
+    "checkIn": null,
+    "checkOut": null,
+    "status": "absent"
+  },
+  {
+    "Id": 5,
+    "employeeId": 5,
+    "date": "2024-01-15",
+    "checkIn": "09:00",
+    "checkOut": "17:00",
+    "status": "present"
+  },
+  {
+    "Id": 6,
+    "employeeId": 6,
+    "date": "2024-01-15",
+    "checkIn": "08:30",
+    "checkOut": "18:00",
+    "status": "present"
+  },
+  {
+    "Id": 7,
+    "employeeId": 7,
+    "date": "2024-01-15",
+    "checkIn": "09:30",
+    "checkOut": "17:30",
+    "status": "late"
+  },
+  {
+    "Id": 8,
+    "employeeId": 8,
+    "date": "2024-01-15",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "present"
+  },
+  {
+    "Id": 9,
+    "employeeId": 9,
+    "date": "2024-01-15",
+    "checkIn": "09:00",
+    "checkOut": "17:00",
+    "status": "present"
+  },
+  {
+    "Id": 10,
+    "employeeId": 10,
+    "date": "2024-01-15",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "present"
+  },
+  {
+    "Id": 11,
+    "employeeId": 11,
+    "date": "2024-01-15",
+    "checkIn": "08:45",
+    "checkOut": "17:15",
+    "status": "present"
+  },
+  {
+    "Id": 12,
+    "employeeId": 1,
+    "date": "2024-01-16",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "present"
+  },
+  {
+    "Id": 13,
+    "employeeId": 2,
+    "date": "2024-01-16",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "present"
+  },
+  {
+    "Id": 14,
+    "employeeId": 3,
+    "date": "2024-01-16",
+    "checkIn": null,
+    "checkOut": null,
+    "status": "holiday"
+  },
+  {
+    "Id": 15,
+    "employeeId": 4,
+    "date": "2024-01-16",
+    "checkIn": "09:00",
+    "checkOut": "17:00",
+    "status": "present"
+  },
+  {
+    "Id": 16,
+    "employeeId": 5,
+    "date": "2024-01-16",
+    "checkIn": "09:00",
+    "checkOut": "17:00",
+    "status": "present"
+  },
+  {
+    "Id": 17,
+    "employeeId": 6,
+    "date": "2024-01-16",
+    "checkIn": "08:30",
+    "checkOut": "18:00",
+    "status": "present"
+  },
+  {
+    "Id": 18,
+    "employeeId": 7,
+    "date": "2024-01-16",
+    "checkIn": "09:00",
+    "checkOut": "17:30",
+    "status": "present"
+  },
+  {
+    "Id": 19,
+    "employeeId": 8,
+    "date": "2024-01-16",
+    "checkIn": "09:20",
+    "checkOut": "17:30",
+    "status": "late"
+  },
+  {
+    "Id": 20,
+    "employeeId": 9,
+    "date": "2024-01-16",
+    "checkIn": "09:00",
+    "checkOut": "17:00",
+    "status": "present"
+  }
+]
