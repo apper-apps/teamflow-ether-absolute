@@ -8,7 +8,23 @@
     "joinDate": "2022-03-15",
     "phone": "+1 (555) 123-4567",
     "photoUrl": "https://images.unsplash.com/photo-1494790108755-2616b612b6e5?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Mark Johnson",
+        "relationship": "Spouse",
+        "phone": "+1 (555) 987-6543",
+        "email": "mark.johnson@email.com"
+      },
+      {
+        "id": 2,
+        "name": "Helen Johnson",
+        "relationship": "Mother",
+        "phone": "+1 (555) 876-5432",
+        "email": "helen.johnson@email.com"
+      }
+    ]
   },
   {
     "Id": 2,
@@ -19,7 +35,16 @@
     "joinDate": "2021-11-20",
     "phone": "+1 (555) 234-5678",
     "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Lisa Chen",
+        "relationship": "Wife",
+        "phone": "+1 (555) 345-6789",
+        "email": "lisa.chen@email.com"
+      }
+    ]
   },
   {
     "Id": 3,
@@ -30,7 +55,23 @@
     "joinDate": "2023-01-10",
     "phone": "+1 (555) 345-6789",
     "photoUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Carlos Rodriguez",
+        "relationship": "Father",
+        "phone": "+1 (555) 456-7890",
+        "email": "carlos.rodriguez@email.com"
+      },
+      {
+        "id": 2,
+        "name": "Maria Rodriguez",
+        "relationship": "Mother",
+        "phone": "+1 (555) 567-8901",
+        "email": "maria.rodriguez@email.com"
+      }
+    ]
   },
   {
     "Id": 4,
@@ -41,7 +82,16 @@
     "joinDate": "2022-08-05",
     "phone": "+1 (555) 456-7890",
     "photoUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Sophie Kim",
+        "relationship": "Sister",
+        "phone": "+1 (555) 678-9012",
+        "email": "sophie.kim@email.com"
+      }
+    ]
   },
   {
     "Id": 5,
@@ -52,7 +102,23 @@
     "joinDate": "2021-06-12",
     "phone": "+1 (555) 567-8901",
     "photoUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Robert Taylor",
+        "relationship": "Husband",
+        "phone": "+1 (555) 789-0123",
+        "email": "robert.taylor@email.com"
+      },
+      {
+        "id": 2,
+        "name": "Nancy Taylor",
+        "relationship": "Mother-in-law",
+        "phone": "+1 (555) 890-1234",
+        "email": "nancy.taylor@email.com"
+      }
+    ]
   },
   {
     "Id": 6,
@@ -63,7 +129,16 @@
     "joinDate": "2020-09-30",
     "phone": "+1 (555) 678-9012",
     "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Emma Anderson",
+        "relationship": "Daughter",
+        "phone": "+1 (555) 901-2345",
+        "email": "emma.anderson@email.com"
+      }
+    ]
   },
   {
     "Id": 7,
@@ -74,7 +149,16 @@
     "joinDate": "2022-12-01",
     "phone": "+1 (555) 789-0123",
     "photoUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "John Thompson",
+        "relationship": "Brother",
+        "phone": "+1 (555) 012-3456",
+        "email": "john.thompson@email.com"
+      }
+    ]
   },
   {
     "Id": 8,
@@ -85,7 +169,23 @@
     "joinDate": "2023-02-14",
     "phone": "+1 (555) 890-1234",
     "photoUrl": "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Sarah Wilson",
+        "relationship": "Wife",
+        "phone": "+1 (555) 123-4567",
+        "email": "sarah.wilson@email.com"
+      },
+      {
+        "id": 2,
+        "name": "Tom Wilson",
+        "relationship": "Father",
+        "phone": "+1 (555) 234-5678",
+        "email": "tom.wilson@email.com"
+      }
+    ]
   },
   {
     "Id": 9,
@@ -96,7 +196,16 @@
     "joinDate": "2022-05-18",
     "phone": "+1 (555) 901-2345",
     "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Diego Garcia",
+        "relationship": "Husband",
+        "phone": "+1 (555) 345-6789",
+        "email": "diego.garcia@email.com"
+      }
+    ]
   },
   {
     "Id": 10,
@@ -107,7 +216,16 @@
     "joinDate": "2023-06-01",
     "phone": "+1 (555) 012-3456",
     "photoUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Jennifer Brown",
+        "relationship": "Mother",
+        "phone": "+1 (555) 456-7890",
+        "email": "jennifer.brown@email.com"
+      }
+    ]
   },
   {
     "Id": 11,
@@ -118,7 +236,23 @@
     "joinDate": "2021-10-08",
     "phone": "+1 (555) 123-4567",
     "photoUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop&crop=face",
-    "status": "active"
+    "status": "active",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Michael Davis",
+        "relationship": "Brother",
+        "phone": "+1 (555) 567-8901",
+        "email": "michael.davis@email.com"
+      },
+      {
+        "id": 2,
+        "name": "Linda Davis",
+        "relationship": "Mother",
+        "phone": "+1 (555) 678-9012",
+        "email": "linda.davis@email.com"
+      }
+    ]
   },
   {
     "Id": 12,
@@ -129,6 +263,15 @@
     "joinDate": "2022-07-22",
     "phone": "+1 (555) 234-5678",
     "photoUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face",
-    "status": "inactive"
+    "status": "inactive",
+    "emergencyContacts": [
+      {
+        "id": 1,
+        "name": "Ana Martinez",
+        "relationship": "Wife",
+        "phone": "+1 (555) 789-0123",
+        "email": "ana.martinez@email.com"
+      }
+    ]
   }
 ]

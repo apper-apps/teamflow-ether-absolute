@@ -20,21 +20,22 @@ class EmployeeService {
     return { ...employee };
   }
 
-  async create(employeeData) {
+async create(employeeData) {
     await new Promise(resolve => setTimeout(resolve, 400));
     
     const maxId = Math.max(...this.employees.map(emp => emp.Id), 0);
     const newEmployee = {
       ...employeeData,
       Id: maxId + 1,
-      joinDate: new Date().toISOString().split("T")[0]
+      joinDate: new Date().toISOString().split("T")[0],
+      emergencyContacts: employeeData.emergencyContacts || []
     };
     
     this.employees.push(newEmployee);
     return { ...newEmployee };
   }
 
-  async update(id, employeeData) {
+async update(id, employeeData) {
     await new Promise(resolve => setTimeout(resolve, 400));
     
     const index = this.employees.findIndex(emp => emp.Id === parseInt(id));
@@ -42,7 +43,11 @@ class EmployeeService {
       throw new Error("Employee not found");
     }
     
-    this.employees[index] = { ...this.employees[index], ...employeeData };
+    this.employees[index] = { 
+      ...this.employees[index], 
+      ...employeeData,
+      emergencyContacts: employeeData.emergencyContacts || this.employees[index].emergencyContacts || []
+    };
     return { ...this.employees[index] };
   }
 

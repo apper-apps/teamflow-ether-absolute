@@ -36,7 +36,7 @@ const EmployeeCard = ({ employee, onEdit, onDelete }) => {
         </Badge>
       </div>
       
-      <div className="space-y-2 mb-4">
+<div className="space-y-2 mb-4">
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <ApperIcon name="Building2" size={16} />
           <span>{employee.department}</span>
@@ -49,6 +49,19 @@ const EmployeeCard = ({ employee, onEdit, onDelete }) => {
           <ApperIcon name="Phone" size={16} />
           <span>{employee.phone}</span>
         </div>
+        {employee.emergencyContacts && employee.emergencyContacts.length > 0 && (
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <ApperIcon name="Contact" size={16} />
+            <span>
+              {employee.emergencyContacts.length} Emergency Contact{employee.emergencyContacts.length !== 1 ? 's' : ''}
+              {employee.emergencyContacts[0] && (
+                <span className="text-gray-500 ml-1">
+                  ({employee.emergencyContacts[0].name} - {employee.emergencyContacts[0].relationship})
+                </span>
+              )}
+            </span>
+          </div>
+        )}
       </div>
       
       <div className="flex gap-2">
