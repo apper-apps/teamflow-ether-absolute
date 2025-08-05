@@ -63,9 +63,13 @@ class LeaveRequestService {
   }
 
   async getByStatus(status) {
-    await new Promise(resolve => setTimeout(resolve, 200));
+await new Promise(resolve => setTimeout(resolve, 200));
     return this.leaveRequests.filter(req => req.status === status);
   }
-}
 
+  async getPendingRequests() {
+    await new Promise(resolve => setTimeout(resolve, 200));
+    return this.leaveRequests.filter(req => req.status === 'pending');
+  }
+}
 export const leaveRequestService = new LeaveRequestService();

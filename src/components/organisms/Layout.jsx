@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/organisms/Sidebar";
 import Button from "@/components/atoms/Button";
-
+import NotificationCenter from "@/components/organisms/NotificationCenter";
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -24,10 +24,12 @@ const Layout = () => {
               <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">T</span>
               </div>
-              <span className="font-bold text-gray-900">TeamFlow</span>
-            </div>
-            <div className="w-10" /> {/* Spacer for centering */}
+<span className="font-bold text-gray-900">TeamFlow</span>
           </div>
+          <div className="flex items-center gap-2">
+            <NotificationCenter />
+          </div>
+        </div>
         </div>
         
         {/* Main Content */}

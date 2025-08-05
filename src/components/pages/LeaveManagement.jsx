@@ -9,6 +9,7 @@ import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import { leaveRequestService } from "@/services/api/leaveRequestService";
 import { employeeService } from "@/services/api/employeeService";
+import { notificationService } from "@/services/api/notificationService";
 import { toast } from "react-toastify";
 
 const LeaveManagement = () => {
@@ -70,9 +71,16 @@ const LeaveManagement = () => {
     setFilteredLeaveRequests(filtered);
   }, [leaveRequests, statusFilter, searchTerm, employees]);
 
-  const handleApprove = async (request) => {
+const handleApprove = async (request) => {
     try {
       await leaveRequestService.update(request.Id, { ...request, status: "approved" });
+      
+      // Generate notification for status update
+      const employee = employees.find(emp => emp.Id === request.employeeId);
+      if (employee) {
+        await notificationService.generateLeaveStatusNotification(request, employee, 'approved');
+      }
+      
       toast.success("Leave request approved successfully");
       loadData();
     } catch (error) {
@@ -80,9 +88,16 @@ const LeaveManagement = () => {
     }
   };
 
-  const handleReject = async (request) => {
+const handleReject = async (request) => {
     try {
       await leaveRequestService.update(request.Id, { ...request, status: "rejected" });
+      
+      // Generate notification for status update
+      const employee = employees.find(emp => emp.Id === request.employeeId);
+      if (employee) {
+        await notificationService.generateLeaveStatusNotification(request, employee, 'rejected');
+      }
+      
       toast.success("Leave request rejected");
       loadData();
     } catch (error) {
@@ -90,9 +105,16 @@ const LeaveManagement = () => {
     }
   };
 
-  const handleSubmitRequest = async (requestData) => {
+const handleSubmitRequest = async (requestData) => {
     try {
-      await leaveRequestService.create(requestData);
+      const newRequest = await leaveRequestService.create(requestData);
+      
+      // Generate notification for approval needed
+      const employee = employees.find(emp => emp.Id === requestData.employeeId);
+      if (employee) {
+        await notificationService.generateLeaveApprovalNotification(newRequest, employee);
+      }
+      
       toast.success("Leave request submitted successfully");
       loadData();
     } catch (error) {

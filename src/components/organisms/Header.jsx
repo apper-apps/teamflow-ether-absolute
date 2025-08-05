@@ -29,8 +29,7 @@ const Header = ({ title, searchValue, onSearchChange, showSearch = true, actions
             </div>
           )}
           
-          <Button variant="ghost" icon="Bell" size="md" />
-          <Button variant="ghost" icon="Settings" size="md" />
+<Button variant="ghost" icon="Settings" size="md" />
         </div>
       </div>
     </div>
