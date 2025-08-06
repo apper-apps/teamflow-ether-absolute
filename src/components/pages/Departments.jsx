@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { employeeService } from "@/services/api/employeeService";
+import { departmentService } from "@/services/api/departmentService";
+import ApperIcon from "@/components/ApperIcon";
 import Header from "@/components/organisms/Header";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import Select from "@/components/atoms/Select";
-import Badge from "@/components/atoms/Badge";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
-import { departmentService } from "@/services/api/departmentService";
-import { employeeService } from "@/services/api/employeeService";
-import { toast } from "react-toastify";
+import Badge from "@/components/atoms/Badge";
+import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
+import Card from "@/components/atoms/Card";
 
 const Departments = () => {
   const [departments, setDepartments] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
+const [searchTerm, setSearchTerm] = useState("");
+  const [filterManager, setFilterManager] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingDepartment, setEditingDepartment] = useState(null);
   const [formData, setFormData] = useState({
@@ -118,170 +119,195 @@ const Departments = () => {
     return manager ? manager.Name : "No Manager";
   };
 
-  const filteredDepartments = departments.filter(dept =>
-    dept.Name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+const filteredDepartments = departments.filter(dept => {
+    const matchesSearch = dept.Name?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesManager = !filterManager || dept.managerId === parseInt(filterManager);
+    return matchesSearch && matchesManager;
+  });
 
-  if (loading) return <Loading />;
+if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={loadData} />;
 
   return (
-    <div className="space-y-6">
-      <Header
-        title="Departments"
-        subtitle="Manage company departments and their managers"
-      />
-
-      {/* Actions Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between">
-        <div className="flex-1 max-w-md">
-          <Input
-            placeholder="Search departments..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            icon="Search"
-          />
-        </div>
-        <Button
-          onClick={() => {
-            setEditingDepartment(null);
-            setFormData({ Name: "", managerId: "" });
-            setShowModal(true);
-          }}
-          className="flex items-center gap-2"
-        >
-          <ApperIcon name="Plus" size={20} />
-          Add Department
-        </Button>
-      </div>
-
-      {/* Departments Grid */}
-      {filteredDepartments.length === 0 ? (
-        <Empty
-          message="No departments found"
-          description="Create your first department to get started"
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDepartments.map((department) => (
-            <Card key={department.Id} className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <ApperIcon name="Building" className="text-white" size={24} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{department.Name}</h3>
-                    <p className="text-sm text-gray-600">Department</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleEdit(department)}
-                  >
-                    <ApperIcon name="Edit" size={16} />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(department)}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <ApperIcon name="Trash2" size={16} />
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Manager:</span>
-                  <span className="font-medium">{getManagerName(department.managerId)}</span>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Employees:</span>
-                  <Badge variant="secondary">
-                    {employees.filter(emp => emp.department === department.Name).length}
-                  </Badge>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      {/* Department Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-xl font-semibold">
-                {editingDepartment ? "Edit Department" : "Add Department"}
-              </h2>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowModal(false)}
-              >
-                <ApperIcon name="X" size={20} />
-              </Button>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Department Name *
-                </label>
-                <Input
-                  value={formData.Name}
-                  onChange={(e) => setFormData({ ...formData, Name: e.target.value })}
-                  placeholder="Enter department name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Manager
-                </label>
-                <Select
-                  value={formData.managerId}
-                  onChange={(e) => setFormData({ ...formData, managerId: e.target.value })}
-                >
-                  <option value="">Select Manager</option>
-                  {employees.map((employee) => (
-                    <option key={employee.Id} value={employee.Id}>
-                      {employee.Name}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-
-              <div className="flex items-center gap-3 pt-4">
-                <Button
-                  type="submit"
-                  disabled={formLoading}
-                  className="flex-1"
-                >
-                  {formLoading ? (
-                    <ApperIcon name="Loader2" size={16} className="animate-spin" />
-                  ) : editingDepartment ? "Update Department" : "Create Department"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => setShowModal(false)}
-                  disabled={formLoading}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="px-6 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">Departments</h1>
+            <Button 
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-2"
+            >
+              <ApperIcon name="Plus" size={16} />
+              Add Department
+            </Button>
           </div>
+
+          {/* Search and Filters */}
+          <div className="mb-6 flex gap-4">
+            <div className="flex-1">
+              <Input
+                type="text"
+                placeholder="Search departments..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <Select
+              value={filterManager}
+              onChange={(e) => setFilterManager(e.target.value)}
+              className="w-48"
+            >
+              <option value="">All Managers</option>
+              {employees.map(emp => (
+                <option key={emp.Id} value={emp.Id}>{emp.Name || emp.name}</option>
+              ))}
+            </Select>
+          </div>
+
+          {/* Departments Grid */}
+          {filteredDepartments.length === 0 ? (
+            <Empty 
+              title="No departments found"
+              description={searchTerm || filterManager ? "No departments match your search criteria" : "Get started by creating your first department"}
+              action={
+                <Button onClick={() => setShowModal(true)}>
+                  <ApperIcon name="Plus" size={16} className="mr-2" />
+                  Add Department
+                </Button>
+              }
+            />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredDepartments.map((department) => (
+                <Card key={department.Id} className="p-6 hover:shadow-lg transition-shadow">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        {department.name || department.Name}
+                      </h3>
+                      <div className="text-sm text-gray-600">
+                        <div className="flex items-center gap-2 mb-1">
+                          <ApperIcon name="User" size={14} />
+                          <span>Manager: {getManagerName(department.managerId) || 'Not assigned'}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(department)}
+                      >
+                        <ApperIcon name="Edit2" size={14} />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(department)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <ApperIcon name="Trash2" size={14} />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {department.Tags && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {department.Tags.split(',').map((tag, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {tag.trim()}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="text-sm text-gray-500">
+                    Department ID: {department.Id}
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Add/Edit Modal */}
+          {showModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+                <h2 className="text-xl font-semibold mb-4">
+                  {editingDepartment ? 'Edit Department' : 'Add New Department'}
+                </h2>
+                
+                <form onSubmit={handleSubmit}>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Department Name
+                      </label>
+                      <Input
+                        type="text"
+value={formData.Name}
+                        onChange={(e) => setFormData(prev => ({ ...prev, Name: e.target.value }))}
+                        required
+                        placeholder="Enter department name"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Manager
+                      </label>
+                      <Select
+                        value={formData.managerId || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, managerId: e.target.value }))}
+                      >
+                        <option value="">Select a manager</option>
+                        {employees.map(emp => (
+                          <option key={emp.Id} value={emp.Id}>
+                            {emp.Name || emp.name}
+                          </option>
+                        ))}
+                      </Select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tags (comma separated)
+                      </label>
+                      <Input
+                        type="text"
+                        value={formData.Tags || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, Tags: e.target.value }))}
+                        placeholder="e.g., tech, innovation, core"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-3 mt-6">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setShowModal(false);
+                        setEditingDepartment(null);
+setFormData({ Name: '', managerId: '', Tags: '' });
+                      }}
+                    >
+                      Cancel
+                    </Button>
+<Button type="submit" disabled={formLoading}>
+                      {formLoading ? 'Saving...' : (editingDepartment ? 'Update' : 'Create')}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
