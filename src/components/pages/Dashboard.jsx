@@ -13,7 +13,7 @@ import Error from "@/components/ui/Error";
 import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
 import Card from "@/components/atoms/Card";
-
+import DepartmentModal from "@/components/organisms/DepartmentModal";
 const Dashboard = () => {
 const [data, setData] = useState({
     employees: [],
@@ -21,8 +21,10 @@ const [data, setData] = useState({
     leaveRequests: [],
     departments: []
   });
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [departments, setDepartments] = useState([]);
+  const [showDepartmentModal, setShowDepartmentModal] = useState(false);
 
 const loadDashboardData = async () => {
     try {
@@ -67,6 +69,19 @@ const loadDashboardData = async () => {
     } catch (error) {
       toast.error("Failed to reject leave request");
     }
+};
+
+  const handleCreateDepartment = async (departmentData) => {
+    try {
+      await departmentService.create(departmentData);
+      toast.success("Department created successfully!");
+      // Refresh dashboard data
+      loadDashboardData();
+      setShowDepartmentModal(false);
+    } catch (error) {
+      toast.error("Failed to create department");
+      throw error;
+    }
   };
 
   if (loading) return <Loading variant="stats" />;
@@ -80,7 +95,7 @@ const totalEmployees = data.employees.length;
 
   const attendancePercentage = totalEmployees > 0 ? Math.round((presentToday / totalEmployees) * 100) : 0;
   return (
-    <div className="p-6">
+<div className="p-6">
       <Header 
         title="Dashboard" 
         showSearch={false}
@@ -260,6 +275,12 @@ const employee = data.employees.find(emp => emp.Id === attendance.employeeId);
           </div>
         </Card>
       </div>
+{/* Department Creation Modal */}
+      <DepartmentModal
+        isOpen={showDepartmentModal}
+        onClose={() => setShowDepartmentModal(false)}
+        onSave={handleCreateDepartment}
+      />
     </div>
   );
 };
