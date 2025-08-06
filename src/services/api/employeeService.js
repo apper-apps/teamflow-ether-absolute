@@ -12,9 +12,9 @@ class EmployeeService {
           apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
           apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
         });
-      } catch (error) {
+} catch (error) {
         console.error("Failed to initialize ApperClient:", error);
-}
+      }
     } else {
       console.warn("ApperSDK not available - employee service will not function");
     }

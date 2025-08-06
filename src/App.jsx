@@ -1,20 +1,21 @@
-import { createContext, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import React, { createContext, useEffect, useState } from "react";
+import { Route, Router, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser, clearUser } from './store/userSlice';
+import { useDispatch, useSelector } from "react-redux";
+import "@/index.css";
 import Layout from "@/components/organisms/Layout";
-import Dashboard from "@/components/pages/Dashboard";
 import Employees from "@/components/pages/Employees";
-import Attendance from "@/components/pages/Attendance";
 import LeaveManagement from "@/components/pages/LeaveManagement";
-import Reports from "@/components/pages/Reports";
 import Login from "@/components/pages/Login";
-import Signup from "@/components/pages/Signup";
-import Callback from "@/components/pages/Callback";
-import ErrorPage from "@/components/pages/ErrorPage";
-import ResetPassword from "@/components/pages/ResetPassword";
 import PromptPassword from "@/components/pages/PromptPassword";
+import Reports from "@/components/pages/Reports";
+import ResetPassword from "@/components/pages/ResetPassword";
+import Callback from "@/components/pages/Callback";
+import Dashboard from "@/components/pages/Dashboard";
+import ErrorPage from "@/components/pages/ErrorPage";
+import Signup from "@/components/pages/Signup";
+import Attendance from "@/components/pages/Attendance";
+import { clearUser, setUser } from "@/store/userSlice";
 
 // Create auth context
 export const AuthContext = createContext(null);
@@ -86,7 +87,7 @@ useEffect(() => {
           clearTimeout(initializationTimeout);
           return;
         }
-        
+
         const client = new ApperClient({
           apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
           apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
