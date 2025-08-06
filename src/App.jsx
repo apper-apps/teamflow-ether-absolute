@@ -93,8 +93,9 @@ function AppContent() {
           dispatch(clearUser());
         }
       },
-      onError: function(error) {
+onError: function(error) {
         console.error("Authentication failed:", error);
+        setIsInitialized(true);
       }
     });
   }, []);// No props and state should be bound
