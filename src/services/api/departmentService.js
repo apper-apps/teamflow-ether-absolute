@@ -14,7 +14,8 @@ class DepartmentService {
   async getAll() {
     try {
       const params = {
-        fields: [
+fields: [
+          { field: { Name: "Id" } },
           { field: { Name: "Name" } },
           { field: { Name: "Tags" } },
           { field: { Name: "managerId" } }
@@ -48,7 +49,8 @@ class DepartmentService {
   async getById(id) {
     try {
       const params = {
-        fields: [
+fields: [
+          { field: { Name: "Id" } },
           { field: { Name: "Name" } },
           { field: { Name: "Tags" } },
           { field: { Name: "managerId" } }
