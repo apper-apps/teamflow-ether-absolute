@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import Header from "@/components/organisms/Header";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { employeeService } from "@/services/api/employeeService";
+import { departmentService } from "@/services/api/departmentService";
 import EmployeeCard from "@/components/molecules/EmployeeCard";
+import Header from "@/components/organisms/Header";
 import EmployeeModal from "@/components/organisms/EmployeeModal";
-import Button from "@/components/atoms/Button";
-import Select from "@/components/atoms/Select";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import { employeeService } from "@/services/api/employeeService";
-import { departmentService } from "@/services/api/departmentService";
-import { toast } from "react-toastify";
+import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -47,14 +47,14 @@ const Employees = () => {
     loadData();
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
     let filtered = employees;
     
     if (searchTerm) {
-      filtered = filtered.filter(emp => 
-        emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.role.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(emp =>
+        (emp.name || emp.Name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (emp.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (emp.role || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
@@ -76,7 +76,7 @@ const Employees = () => {
   };
 
   const handleDeleteEmployee = async (employee) => {
-    if (window.confirm(`Are you sure you want to delete ${employee.name}?`)) {
+if (window.confirm(`Are you sure you want to delete ${employee.name || employee.Name}?`)) {
       try {
         await employeeService.delete(employee.Id);
         toast.success("Employee deleted successfully");
@@ -129,9 +129,9 @@ const Employees = () => {
                 placeholder="All Departments"
               >
                 <option value="">All Departments</option>
-                {departments.map(dept => (
-                  <option key={dept.Id} value={dept.name}>
-                    {dept.name}
+{departments.map(dept => (
+                  <option key={dept.Id} value={dept.name || dept.Name}>
+                    {dept.name || dept.Name}
                   </option>
                 ))}
               </Select>

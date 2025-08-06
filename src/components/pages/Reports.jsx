@@ -97,7 +97,7 @@ const Reports = () => {
 
   // Department breakdown
   const departmentStats = data.departments.map(dept => {
-    const deptEmployees = data.employees.filter(emp => emp.department === dept.name);
+const deptEmployees = data.employees.filter(emp => emp.department === (dept.name || dept.Name));
     const deptAttendance = monthAttendance.filter(att => 
       deptEmployees.some(emp => emp.Id === att.employeeId) && att.status === "present"
     );
@@ -105,8 +105,8 @@ const Reports = () => {
     const deptAttendanceRate = deptWorkingDays > 0 ? 
       Math.round((deptAttendance.length / deptWorkingDays) * 100) : 0;
 
-    return {
-      name: dept.name,
+return {
+      name: dept.name || dept.Name,
       employees: deptEmployees.length,
       attendanceRate: deptAttendanceRate,
       leaves: monthLeaveRequests.filter(req => 
@@ -130,8 +130,8 @@ const Reports = () => {
               >
                 <option value="">All Departments</option>
                 {data.departments.map(dept => (
-                  <option key={dept.Id} value={dept.name}>
-                    {dept.name}
+<option key={dept.Id} value={dept.name || dept.Name}>
+                    {dept.name || dept.Name}
                   </option>
                 ))}
               </Select>
@@ -244,11 +244,11 @@ const Reports = () => {
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
                         <span className="text-xs font-semibold text-gray-600">
-                          {employee?.name?.split(" ").map(n => n[0]).join("") || "?"}
+{(employee?.name || employee?.Name)?.split(" ").map(n => n[0]).join("") || "?"}
                         </span>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{employee?.name}</p>
+<p className="text-sm font-medium text-gray-900">{employee?.name || employee?.Name}</p>
                         <p className="text-xs text-gray-600 capitalize">{request.type} leave</p>
                       </div>
                     </div>

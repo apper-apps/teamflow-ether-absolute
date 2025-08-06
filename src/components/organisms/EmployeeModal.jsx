@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import Button from "@/components/atoms/Button";
+import React, { useEffect, useState } from "react";
+import ApperIcon from "@/components/ApperIcon";
 import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
 import Select from "@/components/atoms/Select";
 import Card from "@/components/atoms/Card";
-import ApperIcon from "@/components/ApperIcon";
 import { cn } from "@/utils/cn";
 
 const EmployeeModal = ({ isOpen, onClose, employee, onSave, departments }) => {
@@ -19,10 +19,10 @@ const [formData, setFormData] = useState({
   });
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-if (employee) {
+useEffect(() => {
+    if (employee) {
       setFormData({
-        name: employee.name || "",
+        name: employee.name || employee.Name || "",
         email: employee.email || "",
         role: employee.role || "",
         department: employee.department || "",
@@ -149,9 +149,9 @@ const handleChange = (e) => {
                   required
                 >
                   <option value="">Select Department</option>
-                  {departments.map(dept => (
-                    <option key={dept.Id} value={dept.name}>
-                      {dept.name}
+{departments.map(dept => (
+                    <option key={dept.Id} value={dept.name || dept.Name}>
+                      {dept.name || dept.Name}
                     </option>
                   ))}
                 </Select>

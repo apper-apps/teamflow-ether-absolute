@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import Header from "@/components/organisms/Header";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { notificationService } from "@/services/api/notificationService";
+import { employeeService } from "@/services/api/employeeService";
+import { leaveRequestService } from "@/services/api/leaveRequestService";
 import LeaveRequestCard from "@/components/molecules/LeaveRequestCard";
+import Header from "@/components/organisms/Header";
 import LeaveRequestModal from "@/components/organisms/LeaveRequestModal";
-import Button from "@/components/atoms/Button";
-import Select from "@/components/atoms/Select";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import { leaveRequestService } from "@/services/api/leaveRequestService";
-import { employeeService } from "@/services/api/employeeService";
-import { notificationService } from "@/services/api/notificationService";
-import { toast } from "react-toastify";
+import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
 
 const LeaveManagement = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -53,12 +53,11 @@ const LeaveManagement = () => {
     if (statusFilter) {
       filtered = filtered.filter(req => req.status === statusFilter);
     }
-    
-    if (searchTerm) {
+if (searchTerm) {
       const employeeIds = employees
         .filter(emp => 
-          emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          emp.department.toLowerCase().includes(searchTerm.toLowerCase())
+          (emp.name || emp.Name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (emp.department || '').toLowerCase().includes(searchTerm.toLowerCase())
         )
         .map(emp => emp.Id);
       

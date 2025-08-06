@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { AuthContext } from "../../App";
 import Sidebar from "@/components/organisms/Sidebar";
-import Button from "@/components/atoms/Button";
 import NotificationCenter from "@/components/organisms/NotificationCenter";
-const Layout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+import Button from "@/components/atoms/Button";
 
+const Layout = () => {
+const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -25,11 +27,18 @@ const Layout = () => {
                 <span className="text-white font-bold text-sm">T</span>
               </div>
 <span className="font-bold text-gray-900">TeamFlow</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <NotificationCenter />
+              <Button
+                variant="ghost"
+                icon="LogOut"
+                onClick={logout}
+                size="sm"
+                className="text-gray-600 hover:text-gray-800"
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <NotificationCenter />
-          </div>
-        </div>
         </div>
         
         {/* Main Content */}

@@ -21,13 +21,13 @@ const EmployeeCard = ({ employee, onEdit, onDelete }) => {
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <Avatar
-            src={employee.photoUrl}
-            alt={employee.name}
-            fallback={getInitials(employee.name)}
+src={employee.photoUrl}
+            alt={employee.name || employee.Name}
+            fallback={getInitials(employee.name || employee.Name)}
             size="lg"
           />
           <div>
-            <h3 className="font-semibold text-gray-900">{employee.name}</h3>
+<h3 className="font-semibold text-gray-900">{employee.name || employee.Name}</h3>
             <p className="text-sm text-gray-600">{employee.role}</p>
           </div>
         </div>

@@ -136,7 +136,7 @@ const Dashboard = () => {
               </div>
             ) : (
               todaysAttendance.map((attendance) => {
-                const employee = data.employees.find(emp => emp.Id === attendance.employeeId);
+const employee = data.employees.find(emp => emp.Id === attendance.employeeId);
                 const statusColor = attendance.status === "present" ? "success" : 
                                  attendance.status === "late" ? "warning" : "error";
                 
@@ -144,12 +144,12 @@ const Dashboard = () => {
                   <div key={attendance.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
-                        <span className="text-xs font-semibold text-gray-600">
-                          {employee?.name?.split(" ").map(n => n[0]).join("") || "?"}
+<span className="text-xs font-semibold text-gray-600">
+                          {(employee?.name || employee?.Name)?.split(" ").map(n => n[0]).join("") || "?"}
                         </span>
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">{employee?.name}</p>
+<p className="font-medium text-gray-900">{employee?.name || employee?.Name}</p>
                         <p className="text-sm text-gray-600">{employee?.department}</p>
                       </div>
                     </div>
@@ -190,7 +190,7 @@ const Dashboard = () => {
                     <div key={request.Id} className="p-4 bg-gray-50 rounded-lg">
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <p className="font-medium text-gray-900">{employee?.name}</p>
+<p className="font-medium text-gray-900">{employee?.name || employee?.Name}</p>
                           <p className="text-sm text-gray-600 capitalize">{request.type} leave</p>
                           <p className="text-xs text-gray-500">
                             {format(new Date(request.startDate), "MMM dd")} - {format(new Date(request.endDate), "MMM dd")}
