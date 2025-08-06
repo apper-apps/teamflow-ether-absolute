@@ -164,12 +164,13 @@ if (window.confirm(`Are you sure you want to delete ${employee.name || employee.
         </div>
       )}
 
-      <EmployeeModal
+<EmployeeModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         employee={selectedEmployee}
         onSave={handleSaveEmployee}
         departments={departments}
+        onDepartmentRefresh={loadData}
       />
     </div>
   );

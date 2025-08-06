@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { departmentService } from "@/services/api/departmentService";
 import ApperIcon from "@/components/ApperIcon";
+import DepartmentModal from "@/components/organisms/DepartmentModal";
 import Input from "@/components/atoms/Input";
 import Button from "@/components/atoms/Button";
 import Select from "@/components/atoms/Select";
 import Card from "@/components/atoms/Card";
 import { cn } from "@/utils/cn";
 
-const EmployeeModal = ({ isOpen, onClose, employee, onSave, departments }) => {
+const EmployeeModal = ({ isOpen, onClose, employee, onSave, departments, onDepartmentRefresh }) => {
 const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -59,9 +62,38 @@ useEffect(() => {
     }
   };
 
-const handleChange = (e) => {
+const [showDepartmentModal, setShowDepartmentModal] = useState(false);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Handle special case for "Add New Department" option
+    if (name === 'department' && value === '__add_new__') {
+      handleAddDepartment();
+      return;
+    }
+    
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddDepartment = () => {
+    setShowDepartmentModal(true);
+  };
+
+  const handleDepartmentSave = async (departmentData) => {
+    try {
+      await departmentService.create(departmentData);
+      toast.success("Department created successfully");
+      setShowDepartmentModal(false);
+      
+      // Refresh departments list in parent component
+      if (onDepartmentRefresh) {
+        await onDepartmentRefresh();
+      }
+    } catch (error) {
+      toast.error("Failed to create department");
+      throw error;
+    }
   };
 
   const handleAddEmergencyContact = () => {
@@ -148,14 +180,17 @@ const handleChange = (e) => {
                   onChange={handleChange}
                   required
                 >
-                  <option value="">Select Department</option>
-{departments.map(dept => (
+<option value="">Select Department</option>
+                  <option value="__add_new__" className="text-primary-600 font-medium">
+                    + Add New Department
+                  </option>
+                  {departments.map(dept => (
                     <option key={dept.Id} value={dept.name}>
                       {dept.name}
                     </option>
                   ))}
                 </Select>
-              </div>
+</div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
@@ -187,7 +222,7 @@ const handleChange = (e) => {
                 placeholder="https://example.com/photo.jpg"
               />
 
-{/* Emergency Contacts Section */}
+              {/* Emergency Contacts Section */}
               <div className="space-y-4 pt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Emergency Contacts</h3>
@@ -290,8 +325,15 @@ const handleChange = (e) => {
           </div>
         </Card>
       </div>
+
+      {/* Department Modal */}
+      <DepartmentModal
+        isOpen={showDepartmentModal}
+        onClose={() => setShowDepartmentModal(false)}
+        onSave={handleDepartmentSave}
+      />
     </>
-  );
+);
 };
 
 export default EmployeeModal;
