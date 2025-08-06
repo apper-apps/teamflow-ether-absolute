@@ -20,11 +20,6 @@ class EmployeeService {
     }
   }
 
-  _checkClient() {
-    if (!this.apperClient) {
-      throw new Error("ApperClient not initialized - check network connection and SDK availability");
-    }
-  }
 _checkClient() {
     if (!this.apperClient) {
       throw new Error("EmployeeService: ApperClient not initialized - check network connection and SDK availability");

@@ -20,11 +20,6 @@ class AttendanceService {
     }
   }
 
-  _checkClient() {
-    if (!this.apperClient) {
-      throw new Error("ApperClient not initialized - check network connection and SDK availability");
-    }
-  }
 _checkClient() {
     if (!this.apperClient) {
       throw new Error("AttendanceService: ApperClient not initialized - check network connection and SDK availability");

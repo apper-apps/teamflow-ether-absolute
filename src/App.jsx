@@ -43,8 +43,14 @@ useEffect(() => {
 
     if (!checkSDKAvailability()) {
       return;
-    }
-try {
+}
+    
+    try {
+      if (!window.ApperSDK) {
+        console.error("ApperSDK not loaded - check network connection and script loading");
+        return;
+      }
+      
       const { ApperClient, ApperUI } = window.ApperSDK;
       
       if (!ApperClient || !ApperUI) {
