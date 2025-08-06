@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { departmentService } from "@/services/api/departmentService";
 import ApperIcon from "@/components/ApperIcon";
 import DepartmentModal from "@/components/organisms/DepartmentModal";
