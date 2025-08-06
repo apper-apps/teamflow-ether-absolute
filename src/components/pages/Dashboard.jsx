@@ -38,10 +38,24 @@ const loadDashboardData = async () => {
         departmentService.getAll()
       ]);
       
-      setData({ employees, attendance, leaveRequests, departments });
+setData({ employees, attendance, leaveRequests, departments });
     } catch (error) {
       console.error("Error loading dashboard data:", error);
-      setError("Failed to load dashboard data");
+      
+      // Enhanced error classification for better user feedback
+      if (error.message.includes('Network connection failed')) {
+        setError("Network connection failed. Please check your internet connection and try again.");
+        toast.error("Network connection failed. Please check your internet connection and try again.");
+      } else if (error.message.includes('not available') || error.message.includes('SDK')) {
+        setError("Service unavailable. Please refresh the page and try again.");
+        toast.error("Service unavailable. Please refresh the page and try again.");
+      } else if (error.message.includes('timeout') || error.message.includes('Timeout')) {
+        setError("Connection timeout. Please check your network speed and try again.");
+        toast.error("Connection timeout. Please check your network speed and try again.");
+      } else {
+        setError("Failed to load dashboard data. Please try again later.");
+        toast.error("Failed to load dashboard data. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }

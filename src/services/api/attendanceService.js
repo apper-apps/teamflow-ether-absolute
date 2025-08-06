@@ -11,18 +11,17 @@ class AttendanceService {
         this.apperClient = new ApperClient({
           apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
           apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-        });
-} catch (error) {
+});
+      } catch (error) {
         console.error("Failed to initialize ApperClient:", error);
       }
     } else {
       console.warn("ApperSDK not available - attendance service will not function");
     }
   }
-
 _checkClient() {
     if (!this.apperClient) {
-      throw new Error("AttendanceService not available - connection to backend service failed. Please check your internet connection and try again.");
+      throw new Error("Network connection failed. Please check your internet connection and try again.");
     }
   }
 
@@ -53,10 +52,13 @@ async getAll() {
       if (error?.response?.data?.message) {
         console.error("Error fetching attendance records:", error?.response?.data?.message);
         throw new Error(`Failed to load attendance data: ${error.response.data.message}`);
-      } else if (error.message.includes('not available')) {
+      } else if (error.message.includes('Network connection failed')) {
+        console.error("Network error loading attendance:", error.message);
+        throw error; // Pass through the exact network error message
+      } else if (error.message.includes('not available') || error.message.includes('connection to backend service failed')) {
         console.error("Attendance service unavailable:", error.message);
         throw error; // Pass through service availability errors
-      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+      } else if (error.name === 'NetworkError' || error.message.includes('Network') || error.message.includes('fetch')) {
         console.error("Network error loading attendance:", error.message);
         throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
