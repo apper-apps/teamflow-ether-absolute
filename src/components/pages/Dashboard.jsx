@@ -1,39 +1,42 @@
-import React, { useState, useEffect } from "react";
-import Header from "@/components/organisms/Header";
-import StatCard from "@/components/molecules/StatCard";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Badge from "@/components/atoms/Badge";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import ApperIcon from "@/components/ApperIcon";
-import { employeeService } from "@/services/api/employeeService";
-import { attendanceService } from "@/services/api/attendanceService";
-import { leaveRequestService } from "@/services/api/leaveRequestService";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { format, isToday } from "date-fns";
+import { attendanceService } from "@/services/api/attendanceService";
+import { employeeService } from "@/services/api/employeeService";
+import { leaveRequestService } from "@/services/api/leaveRequestService";
+import { departmentService } from "@/services/api/departmentService";
+import ApperIcon from "@/components/ApperIcon";
+import StatCard from "@/components/molecules/StatCard";
+import Header from "@/components/organisms/Header";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
 const Dashboard = () => {
-  const [data, setData] = useState({
+const [data, setData] = useState({
     employees: [],
     attendance: [],
-    leaveRequests: []
+    leaveRequests: [],
+    departments: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const loadDashboardData = async () => {
+const loadDashboardData = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const [employees, attendance, leaveRequests] = await Promise.all([
+      const [employees, attendance, leaveRequests, departments] = await Promise.all([
         employeeService.getAll(),
         attendanceService.getAll(),
-        leaveRequestService.getAll()
+        leaveRequestService.getAll(),
+        departmentService.getAll()
       ]);
       
-      setData({ employees, attendance, leaveRequests });
+      setData({ employees, attendance, leaveRequests, departments });
     } catch (error) {
       console.error("Error loading dashboard data:", error);
       setError("Failed to load dashboard data");
@@ -68,15 +71,14 @@ const Dashboard = () => {
 
   if (loading) return <Loading variant="stats" />;
   if (error) return <Error message={error} onRetry={loadDashboardData} />;
-
-  const totalEmployees = data.employees.length;
+const totalEmployees = data.employees.length;
   const activeEmployees = data.employees.filter(emp => emp.status === "active").length;
   const todaysAttendance = data.attendance.filter(att => isToday(new Date(att.date)));
   const presentToday = todaysAttendance.filter(att => att.status === "present").length;
   const pendingLeaves = data.leaveRequests.filter(req => req.status === "pending").length;
+  const totalDepartments = data.departments.length;
 
   const attendancePercentage = totalEmployees > 0 ? Math.round((presentToday / totalEmployees) * 100) : 0;
-
   return (
     <div className="p-6">
       <Header 
@@ -118,11 +120,43 @@ const Dashboard = () => {
           icon="Calendar"
           color="warning"
         />
-      </div>
+</div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Today's Attendance */}
-        <Card className="p-6">
+        {/* Statistics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatCard
+            title="Total Employees"
+            value={totalEmployees}
+            icon="Users"
+            trend={{ value: activeEmployees, label: "Active" }}
+            color="blue"
+          />
+          <StatCard
+            title="Today's Attendance"
+            value={`${attendancePercentage}%`}
+            icon="Clock"
+            trend={{ value: presentToday, label: "Present" }}
+            color="green"
+          />
+          <StatCard
+            title="Pending Leaves"
+            value={pendingLeaves}
+            icon="Calendar"
+            trend={{ value: 0, label: "This week" }}
+            color="orange"
+          />
+          <StatCard
+            title="Departments"
+            value={totalDepartments}
+            icon="Building"
+            trend={{ value: totalDepartments, label: "Total" }}
+            color="purple"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Today's Attendance */}
+          <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Today's Attendance</h3>
             <Badge variant="info">{format(new Date(), "MMM dd, yyyy")}</Badge>
