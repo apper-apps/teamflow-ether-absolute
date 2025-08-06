@@ -22,7 +22,7 @@ class DepartmentService {
 
 _checkClient() {
     if (!this.apperClient) {
-      throw new Error("DepartmentService: ApperClient not initialized - check network connection and SDK availability");
+      throw new Error("Department service not available - connection to backend service failed. Please check your internet connection and try again.");
     }
   }
 
@@ -52,13 +52,18 @@ fields: [
       }));
       
       return departments;
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching departments:", error?.response?.data?.message);
+        throw new Error(`Failed to load departments: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error in department service:", error.message);
+        throw new Error("Unable to load department data. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -88,13 +93,18 @@ fields: [
       };
       
       return department;
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error(`Error fetching department with ID ${id}:`, error?.response?.data?.message);
+        throw new Error(`Failed to load department: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error fetching department:", error.message);
+        throw new Error("Unable to load department data. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -145,13 +155,18 @@ async create(departmentData) {
           };
         }
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error creating department:", error?.response?.data?.message);
+        throw new Error(`Failed to create department: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to create department. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error creating department:", error.message);
+        throw new Error("Unable to create department. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -202,13 +217,18 @@ async update(id, departmentData) {
           };
         }
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error updating department:", error?.response?.data?.message);
+        throw new Error(`Failed to update department: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to update department. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error updating department:", error.message);
+        throw new Error("Unable to update department. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -239,13 +259,18 @@ async delete(id) {
         
         return true;
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error deleting department records:", error?.response?.data?.message);
+        throw new Error(`Failed to delete department: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to delete department. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error deleting department:", error.message);
+        throw new Error("Unable to delete department. Please try again later.");
       }
-      throw error;
     }
   }
 }

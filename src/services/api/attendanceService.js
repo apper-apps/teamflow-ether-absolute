@@ -22,7 +22,7 @@ class AttendanceService {
 
 _checkClient() {
     if (!this.apperClient) {
-      throw new Error("AttendanceService: ApperClient not initialized - check network connection and SDK availability");
+      throw new Error("AttendanceService not available - connection to backend service failed. Please check your internet connection and try again.");
     }
   }
 
@@ -49,13 +49,20 @@ async getAll() {
       }
       
       return response.data || [];
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching attendance records:", error?.response?.data?.message);
+        throw new Error(`Failed to load attendance data: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        console.error("Attendance service unavailable:", error.message);
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        console.error("Network error loading attendance:", error.message);
+        throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error in attendance service:", error.message);
+        throw new Error("Unable to load attendance data. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -82,13 +89,18 @@ async getById(id) {
       }
       
       return response.data;
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error(`Error fetching attendance record with ID ${id}:`, error?.response?.data?.message);
+        throw new Error(`Failed to load attendance record: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error fetching attendance record:", error.message);
+        throw new Error("Unable to load attendance record. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -136,13 +148,18 @@ async create(attendanceData) {
         
         return successfulRecords.length > 0 ? successfulRecords[0].data : null;
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error creating attendance record:", error?.response?.data?.message);
+        throw new Error(`Failed to create attendance record: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to save attendance record. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error creating attendance record:", error.message);
+        throw new Error("Unable to save attendance record. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -190,13 +207,18 @@ async update(id, attendanceData) {
         
         return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error updating attendance record:", error?.response?.data?.message);
+        throw new Error(`Failed to update attendance record: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to update attendance record. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error updating attendance record:", error.message);
+        throw new Error("Unable to update attendance record. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -227,13 +249,18 @@ async delete(id) {
         
         return true;
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error deleting attendance records:", error?.response?.data?.message);
+        throw new Error(`Failed to delete attendance record: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to delete attendance record. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error deleting attendance record:", error.message);
+        throw new Error("Unable to delete attendance record. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -268,13 +295,18 @@ async getByEmployeeId(employeeId) {
       }
       
       return response.data || [];
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching attendance by employee ID:", error?.response?.data?.message);
+        throw new Error(`Failed to load employee attendance: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to load employee attendance. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error fetching attendance by employee:", error.message);
+        throw new Error("Unable to load employee attendance. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -309,13 +341,18 @@ async getByDate(date) {
       }
       
       return response.data || [];
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching attendance by date:", error?.response?.data?.message);
+        throw new Error(`Failed to load attendance for date: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to load attendance data. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error fetching attendance by date:", error.message);
+        throw new Error("Unable to load attendance data. Please try again later.");
       }
-      throw error;
     }
   }
 }

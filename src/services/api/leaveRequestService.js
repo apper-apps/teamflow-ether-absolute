@@ -20,9 +20,9 @@ class LeaveRequestService {
     }
   }
 
-  _checkClient() {
+_checkClient() {
     if (!this.apperClient) {
-      throw new Error("ApperClient not initialized - check network connection and SDK availability");
+      throw new Error("Leave request service not available - connection to backend service failed. Please check your internet connection and try again.");
     }
   }
 
@@ -51,13 +51,18 @@ async getAll() {
       }
       
       return response.data || [];
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching leave requests:", error?.response?.data?.message);
+        throw new Error(`Failed to load leave requests: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error in leave request service:", error.message);
+        throw new Error("Unable to load leave requests. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -86,13 +91,18 @@ async getById(id) {
       }
       
       return response.data;
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error(`Error fetching leave request with ID ${id}:`, error?.response?.data?.message);
+        throw new Error(`Failed to load leave request: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error fetching leave request:", error.message);
+        throw new Error("Unable to load leave request. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -145,13 +155,18 @@ async create(requestData) {
         
         return successfulRecords.length > 0 ? successfulRecords[0].data : null;
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error creating leave request:", error?.response?.data?.message);
+        throw new Error(`Failed to create leave request: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to submit leave request. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error creating leave request:", error.message);
+        throw new Error("Unable to submit leave request. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -199,13 +214,18 @@ async update(id, requestData) {
         
         return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error updating leave request:", error?.response?.data?.message);
+        throw new Error(`Failed to update leave request: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to update leave request. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error updating leave request:", error.message);
+        throw new Error("Unable to update leave request. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -236,13 +256,18 @@ async delete(id) {
         
         return true;
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error deleting leave request records:", error?.response?.data?.message);
+        throw new Error(`Failed to delete leave request: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to delete leave request. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error deleting leave request:", error.message);
+        throw new Error("Unable to delete leave request. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -279,13 +304,18 @@ async getByEmployeeId(employeeId) {
       }
       
       return response.data || [];
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching leave requests by employee ID:", error?.response?.data?.message);
+        throw new Error(`Failed to load employee leave requests: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to load leave requests. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error fetching leave requests by employee:", error.message);
+        throw new Error("Unable to load leave requests. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -322,13 +352,18 @@ async getByStatus(status) {
       }
       
       return response.data || [];
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching leave requests by status:", error?.response?.data?.message);
+        throw new Error(`Failed to load leave requests by status: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to load leave requests. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error fetching leave requests by status:", error.message);
+        throw new Error("Unable to load leave requests. Please try again later.");
       }
-      throw error;
     }
   }
 

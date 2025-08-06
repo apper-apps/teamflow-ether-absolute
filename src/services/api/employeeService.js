@@ -22,7 +22,7 @@ class EmployeeService {
 
 _checkClient() {
     if (!this.apperClient) {
-      throw new Error("EmployeeService: ApperClient not initialized - check network connection and SDK availability");
+      throw new Error("Employee service not available - connection to backend service failed. Please check your internet connection and try again.");
     }
   }
 
@@ -62,13 +62,18 @@ async getAll() {
       }));
       
       return employees;
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching employees:", error?.response?.data?.message);
+        throw new Error(`Failed to load employees: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error in employee service:", error.message);
+        throw new Error("Unable to load employee data. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -108,13 +113,18 @@ async getById(id) {
       };
       
       return employee;
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error(`Error fetching employee with ID ${id}:`, error?.response?.data?.message);
+        throw new Error(`Failed to load employee: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Please check your internet connection and try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error fetching employee:", error.message);
+        throw new Error("Unable to load employee data. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -177,13 +187,18 @@ async create(employeeData) {
           };
         }
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error creating employee:", error?.response?.data?.message);
+        throw new Error(`Failed to create employee: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to create employee. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error creating employee:", error.message);
+        throw new Error("Unable to create employee. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -241,13 +256,18 @@ async update(id, employeeData) {
           };
         }
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error updating employee:", error?.response?.data?.message);
+        throw new Error(`Failed to update employee: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to update employee. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error updating employee:", error.message);
+        throw new Error("Unable to update employee. Please try again later.");
       }
-      throw error;
     }
   }
 
@@ -278,13 +298,18 @@ async delete(id) {
         
         return true;
       }
-    } catch (error) {
+} catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error deleting employee records:", error?.response?.data?.message);
+        throw new Error(`Failed to delete employee: ${error.response.data.message}`);
+      } else if (error.message.includes('not available')) {
+        throw error; // Pass through service availability errors
+      } else if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        throw new Error("Network connection failed. Unable to delete employee. Please try again.");
       } else {
-        console.error(error.message);
+        console.error("Unexpected error deleting employee:", error.message);
+        throw new Error("Unable to delete employee. Please try again later.");
       }
-      throw error;
     }
   }
 }
