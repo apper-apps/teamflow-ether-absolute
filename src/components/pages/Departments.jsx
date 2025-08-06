@@ -22,9 +22,10 @@ const [searchTerm, setSearchTerm] = useState("");
   const [filterManager, setFilterManager] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingDepartment, setEditingDepartment] = useState(null);
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     Name: "",
-    managerId: ""
+    managerId: "",
+    Tags: ""
   });
   const [formLoading, setFormLoading] = useState(false);
 
