@@ -84,14 +84,21 @@ const loadDashboardData = async () => {
     }
   };
 
-  if (loading) return <Loading variant="stats" />;
+if (loading) return <Loading variant="stats" />;
   if (error) return <Error message={error} onRetry={loadDashboardData} />;
-const totalEmployees = data.employees.length;
-  const activeEmployees = data.employees.filter(emp => emp.status === "active").length;
-  const todaysAttendance = data.attendance.filter(att => isToday(new Date(att.date)));
+
+  const totalEmployees = data.employees?.length || 0;
+  const activeEmployees = data.employees?.filter(emp => emp.status === "active")?.length || 0;
+  const todaysAttendance = data.attendance?.filter(att => {
+    try {
+      return att.date && isToday(new Date(att.date));
+    } catch {
+      return false;
+    }
+  }) || [];
   const presentToday = todaysAttendance.filter(att => att.status === "present").length;
-  const pendingLeaves = data.leaveRequests.filter(req => req.status === "pending").length;
-  const totalDepartments = data.departments.length;
+  const pendingLeaves = data.leaveRequests?.filter(req => req.status === "pending")?.length || 0;
+  const totalDepartments = data.departments?.length || 0;
 
   const attendancePercentage = totalEmployees > 0 ? Math.round((presentToday / totalEmployees) * 100) : 0;
   return (
@@ -184,8 +191,8 @@ const totalEmployees = data.employees.length;
                 <p className="text-gray-500">No attendance records for today</p>
               </div>
             ) : (
-              todaysAttendance.map((attendance) => {
-const employee = data.employees.find(emp => emp.Id === attendance.employeeId);
+todaysAttendance.map((attendance) => {
+                const employee = data.employees?.find(emp => emp.Id === attendance.employeeId);
                 const statusColor = attendance.status === "present" ? "success" : 
                                  attendance.status === "late" ? "warning" : "error";
                 
@@ -193,13 +200,16 @@ const employee = data.employees.find(emp => emp.Id === attendance.employeeId);
                   <div key={attendance.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
-<span className="text-xs font-semibold text-gray-600">
-                          {(employee?.name || employee?.Name)?.split(" ").map(n => n[0]).join("") || "?"}
+                        <span className="text-xs font-semibold text-gray-600">
+                          {(() => {
+                            const empName = employee?.name || employee?.Name || '';
+                            return empName ? empName.split(" ").map(n => n[0]).join("") : "?";
+                          })()}
                         </span>
                       </div>
                       <div>
-<p className="font-medium text-gray-900">{employee?.name || employee?.Name}</p>
-                        <p className="text-sm text-gray-600">{employee?.department}</p>
+                        <p className="font-medium text-gray-900">{employee?.name || employee?.Name || 'Unknown Employee'}</p>
+                        <p className="text-sm text-gray-600">{employee?.department || ''}</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -232,14 +242,14 @@ const employee = data.employees.find(emp => emp.Id === attendance.employeeId);
               data.leaveRequests
                 .filter(req => req.status === "pending")
                 .slice(0, 5)
-                .map((request) => {
-                  const employee = data.employees.find(emp => emp.Id === request.employeeId);
+.map((request) => {
+                  const employee = data.employees?.find(emp => emp.Id === request.employeeId);
                   
                   return (
                     <div key={request.Id} className="p-4 bg-gray-50 rounded-lg">
                       <div className="flex items-start justify-between mb-3">
                         <div>
-<p className="font-medium text-gray-900">{employee?.name || employee?.Name}</p>
+                          <p className="font-medium text-gray-900">{employee?.name || employee?.Name || 'Unknown Employee'}</p>
                           <p className="text-sm text-gray-600 capitalize">{request.type} leave</p>
                           <p className="text-xs text-gray-500">
                             {format(new Date(request.startDate), "MMM dd")} - {format(new Date(request.endDate), "MMM dd")}

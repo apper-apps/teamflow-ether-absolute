@@ -1,18 +1,34 @@
 class AttendanceService {
   constructor() {
-    const { ApperClient } = window.ApperSDK;
-    this.apperClient = new ApperClient({
-      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-    });
     this.tableName = 'attendance';
-    
-    // Define updateable fields based on schema
     this.updateableFields = ['Name', 'Tags', 'date', 'checkIn', 'checkOut', 'status', 'employeeId'];
+    this.apperClient = null;
+    
+    // Initialize ApperClient if SDK is available
+    if (window.ApperSDK && window.ApperSDK.ApperClient) {
+      try {
+        const { ApperClient } = window.ApperSDK;
+        this.apperClient = new ApperClient({
+          apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+          apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+        });
+      } catch (error) {
+        console.error("Failed to initialize ApperClient:", error);
+      }
+    } else {
+      console.warn("ApperSDK not available - attendance service will not function");
+    }
   }
 
-  async getAll() {
+  _checkClient() {
+    if (!this.apperClient) {
+      throw new Error("ApperClient not initialized - check network connection and SDK availability");
+    }
+  }
+
+async getAll() {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "Name" } },
@@ -43,8 +59,9 @@ class AttendanceService {
     }
   }
 
-  async getById(id) {
+async getById(id) {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "Name" } },
@@ -75,8 +92,9 @@ class AttendanceService {
     }
   }
 
-  async create(attendanceData) {
+async create(attendanceData) {
     try {
+      this._checkClient();
       // Filter to only include updateable fields
       const filteredData = {};
       this.updateableFields.forEach(field => {
@@ -128,8 +146,9 @@ class AttendanceService {
     }
   }
 
-  async update(id, attendanceData) {
+async update(id, attendanceData) {
     try {
+      this._checkClient();
       // Filter to only include updateable fields
       const filteredData = { Id: parseInt(id) };
       this.updateableFields.forEach(field => {
@@ -181,8 +200,9 @@ class AttendanceService {
     }
   }
 
-  async delete(id) {
+async delete(id) {
     try {
+      this._checkClient();
       const params = {
         RecordIds: [parseInt(id)]
       };
@@ -217,8 +237,9 @@ class AttendanceService {
     }
   }
 
-  async getByEmployeeId(employeeId) {
+async getByEmployeeId(employeeId) {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "Name" } },
@@ -257,8 +278,9 @@ class AttendanceService {
     }
   }
 
-  async getByDate(date) {
+async getByDate(date) {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "Name" } },

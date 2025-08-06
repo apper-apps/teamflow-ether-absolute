@@ -1,18 +1,34 @@
 class EmployeeService {
   constructor() {
-    const { ApperClient } = window.ApperSDK;
-    this.apperClient = new ApperClient({
-      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-    });
     this.tableName = 'employee';
-    
-    // Define updateable fields based on schema
     this.updateableFields = ['Name', 'Tags', 'email', 'role', 'department', 'joinDate', 'phone', 'photoUrl', 'status', 'emergencyContacts'];
+    this.apperClient = null;
+    
+    // Initialize ApperClient if SDK is available
+    if (window.ApperSDK && window.ApperSDK.ApperClient) {
+      try {
+        const { ApperClient } = window.ApperSDK;
+        this.apperClient = new ApperClient({
+          apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+          apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+        });
+      } catch (error) {
+        console.error("Failed to initialize ApperClient:", error);
+      }
+    } else {
+      console.warn("ApperSDK not available - employee service will not function");
+    }
   }
 
-  async getAll() {
+  _checkClient() {
+    if (!this.apperClient) {
+      throw new Error("ApperClient not initialized - check network connection and SDK availability");
+    }
+  }
+
+async getAll() {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "Name" } },
@@ -56,8 +72,9 @@ class EmployeeService {
     }
   }
 
-  async getById(id) {
+async getById(id) {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "Name" } },
@@ -101,8 +118,9 @@ class EmployeeService {
     }
   }
 
-  async create(employeeData) {
+async create(employeeData) {
     try {
+      this._checkClient();
       // Filter to only include updateable fields and map UI fields to database fields
       const filteredData = {};
       this.updateableFields.forEach(field => {
@@ -169,8 +187,9 @@ class EmployeeService {
     }
   }
 
-  async update(id, employeeData) {
+async update(id, employeeData) {
     try {
+      this._checkClient();
       // Filter to only include updateable fields and map UI fields to database fields
       const filteredData = { Id: parseInt(id) };
       this.updateableFields.forEach(field => {
@@ -232,8 +251,9 @@ class EmployeeService {
     }
   }
 
-  async delete(id) {
+async delete(id) {
     try {
+      this._checkClient();
       const params = {
         RecordIds: [parseInt(id)]
       };

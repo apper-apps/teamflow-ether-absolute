@@ -1,18 +1,34 @@
 class LeaveRequestService {
   constructor() {
-    const { ApperClient } = window.ApperSDK;
-    this.apperClient = new ApperClient({
-      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-    });
     this.tableName = 'leave_request';
-    
-    // Define updateable fields based on schema
     this.updateableFields = ['startDate', 'Name', 'Tags', 'type', 'endDate', 'reason', 'status', 'requestDate', 'employeeId'];
+    this.apperClient = null;
+    
+    // Initialize ApperClient if SDK is available
+    if (window.ApperSDK && window.ApperSDK.ApperClient) {
+      try {
+        const { ApperClient } = window.ApperSDK;
+        this.apperClient = new ApperClient({
+          apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+          apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+        });
+      } catch (error) {
+        console.error("Failed to initialize ApperClient:", error);
+      }
+    } else {
+      console.warn("ApperSDK not available - leave request service will not function");
+    }
   }
 
-  async getAll() {
+  _checkClient() {
+    if (!this.apperClient) {
+      throw new Error("ApperClient not initialized - check network connection and SDK availability");
+    }
+  }
+
+async getAll() {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "startDate" } },
@@ -45,8 +61,9 @@ class LeaveRequestService {
     }
   }
 
-  async getById(id) {
+async getById(id) {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "startDate" } },
@@ -79,8 +96,9 @@ class LeaveRequestService {
     }
   }
 
-  async create(requestData) {
+async create(requestData) {
     try {
+      this._checkClient();
       // Filter to only include updateable fields
       const filteredData = {};
       this.updateableFields.forEach(field => {
@@ -137,8 +155,9 @@ class LeaveRequestService {
     }
   }
 
-  async update(id, requestData) {
+async update(id, requestData) {
     try {
+      this._checkClient();
       // Filter to only include updateable fields
       const filteredData = { Id: parseInt(id) };
       this.updateableFields.forEach(field => {
@@ -190,8 +209,9 @@ class LeaveRequestService {
     }
   }
 
-  async delete(id) {
+async delete(id) {
     try {
+      this._checkClient();
       const params = {
         RecordIds: [parseInt(id)]
       };
@@ -226,8 +246,9 @@ class LeaveRequestService {
     }
   }
 
-  async getByEmployeeId(employeeId) {
+async getByEmployeeId(employeeId) {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "startDate" } },
@@ -268,8 +289,9 @@ class LeaveRequestService {
     }
   }
 
-  async getByStatus(status) {
+async getByStatus(status) {
     try {
+      this._checkClient();
       const params = {
         fields: [
           { field: { Name: "startDate" } },

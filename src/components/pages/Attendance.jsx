@@ -45,15 +45,17 @@ const Attendance = () => {
     loadData();
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
     let filtered = attendance.filter(att => att.date === selectedDate);
     
     if (searchTerm) {
       const employeeIds = employees
-        .filter(emp => 
-          emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          emp.department.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+        .filter(emp => {
+          const empName = emp.name || emp.Name || '';
+          const empDept = emp.department || '';
+          return empName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                 empDept.toLowerCase().includes(searchTerm.toLowerCase());
+        })
         .map(emp => emp.Id);
       
       filtered = filtered.filter(att => employeeIds.includes(att.employeeId));

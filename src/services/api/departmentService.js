@@ -1,18 +1,34 @@
 class DepartmentService {
   constructor() {
-    const { ApperClient } = window.ApperSDK;
-    this.apperClient = new ApperClient({
-      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-    });
     this.tableName = 'department';
-    
-    // Define updateable fields based on schema
     this.updateableFields = ['Name', 'Tags', 'managerId'];
+    this.apperClient = null;
+    
+    // Initialize ApperClient if SDK is available
+    if (window.ApperSDK && window.ApperSDK.ApperClient) {
+      try {
+        const { ApperClient } = window.ApperSDK;
+        this.apperClient = new ApperClient({
+          apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+          apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+        });
+      } catch (error) {
+        console.error("Failed to initialize ApperClient:", error);
+      }
+    } else {
+      console.warn("ApperSDK not available - department service will not function");
+    }
   }
 
-  async getAll() {
+  _checkClient() {
+    if (!this.apperClient) {
+      throw new Error("ApperClient not initialized - check network connection and SDK availability");
+    }
+  }
+
+async getAll() {
     try {
+      this._checkClient();
       const params = {
 fields: [
           { field: { Name: "Id" } },
@@ -46,8 +62,9 @@ fields: [
     }
   }
 
-  async getById(id) {
+async getById(id) {
     try {
+      this._checkClient();
       const params = {
 fields: [
           { field: { Name: "Id" } },
@@ -81,8 +98,9 @@ fields: [
     }
   }
 
-  async create(departmentData) {
+async create(departmentData) {
     try {
+      this._checkClient();
       // Filter to only include updateable fields and map UI fields to database fields
       const filteredData = {};
       this.updateableFields.forEach(field => {
@@ -137,8 +155,9 @@ fields: [
     }
   }
 
-  async update(id, departmentData) {
+async update(id, departmentData) {
     try {
+      this._checkClient();
       // Filter to only include updateable fields and map UI fields to database fields
       const filteredData = { Id: parseInt(id) };
       this.updateableFields.forEach(field => {
@@ -193,8 +212,9 @@ fields: [
     }
   }
 
-  async delete(id) {
+async delete(id) {
     try {
+      this._checkClient();
       const params = {
         RecordIds: [parseInt(id)]
       };

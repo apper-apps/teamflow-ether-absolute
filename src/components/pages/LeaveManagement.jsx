@@ -55,17 +55,23 @@ const LeaveManagement = () => {
     }
 if (searchTerm) {
       const employeeIds = employees
-        .filter(emp => 
-          (emp.name || emp.Name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (emp.department || '').toLowerCase().includes(searchTerm.toLowerCase())
-        )
+        .filter(emp => {
+          const empName = emp.name || emp.Name || '';
+          const empDept = emp.department || '';
+          return empName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                 empDept.toLowerCase().includes(searchTerm.toLowerCase());
+        })
         .map(emp => emp.Id);
       
       filtered = filtered.filter(req => employeeIds.includes(req.employeeId));
     }
     
     // Sort by request date (newest first)
-    filtered.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+    filtered.sort((a, b) => {
+      const dateA = a.requestDate ? new Date(a.requestDate) : new Date(0);
+      const dateB = b.requestDate ? new Date(b.requestDate) : new Date(0);
+      return dateB - dateA;
+    });
     
     setFilteredLeaveRequests(filtered);
   }, [leaveRequests, statusFilter, searchTerm, employees]);

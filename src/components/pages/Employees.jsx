@@ -51,15 +51,21 @@ useEffect(() => {
     let filtered = employees;
     
     if (searchTerm) {
-      filtered = filtered.filter(emp =>
-        (emp.name || emp.Name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (emp.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (emp.role || '').toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter(emp => {
+        const empName = emp.name || emp.Name || '';
+        const empEmail = emp.email || '';
+        const empRole = emp.role || '';
+        return empName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               empEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               empRole.toLowerCase().includes(searchTerm.toLowerCase());
+      });
     }
     
     if (selectedDepartment) {
-      filtered = filtered.filter(emp => emp.department === selectedDepartment);
+      filtered = filtered.filter(emp => {
+        const empDept = emp.department || '';
+        return empDept === selectedDepartment;
+      });
     }
     
     setFilteredEmployees(filtered);
