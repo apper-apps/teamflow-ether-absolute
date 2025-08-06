@@ -14,8 +14,8 @@ class AttendanceService {
         });
       } catch (error) {
         console.error("Failed to initialize ApperClient:", error);
-      }
-} else {
+}
+    } else {
       console.warn("ApperSDK not available - attendance service will not function");
     }
   }
@@ -25,10 +25,9 @@ class AttendanceService {
       throw new Error("ApperClient not initialized - check network connection and SDK availability");
     }
   }
-
-  _checkClient() {
+_checkClient() {
     if (!this.apperClient) {
-      throw new Error("ApperClient not initialized - check network connection and SDK availability");
+      throw new Error("AttendanceService: ApperClient not initialized - check network connection and SDK availability");
     }
   }
 

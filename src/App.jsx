@@ -122,14 +122,14 @@ try {
               navigate('/login');
             }
             dispatch(clearUser());
-          }
+}
         },
         onError: function(error) {
           console.error("Authentication failed:", error);
           setIsInitialized(true);
         }
       });
-} catch (error) {
+    } catch (error) {
       console.error("Failed to initialize ApperSDK:", error);
       if (error.name === 'NetworkError' || error.message.includes('Network')) {
         console.error("Network connectivity issue - check internet connection and CDN availability");

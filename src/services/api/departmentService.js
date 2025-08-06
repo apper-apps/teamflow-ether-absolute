@@ -14,8 +14,8 @@ class DepartmentService {
         });
       } catch (error) {
         console.error("Failed to initialize ApperClient:", error);
-      }
-} else {
+}
+    } else {
       console.warn("ApperSDK not available - department service will not function");
     }
   }
@@ -25,10 +25,9 @@ class DepartmentService {
       throw new Error("ApperClient not initialized - check network connection and SDK availability");
     }
   }
-
-  _checkClient() {
+_checkClient() {
     if (!this.apperClient) {
-      throw new Error("ApperClient not initialized - check network connection and SDK availability");
+      throw new Error("DepartmentService: ApperClient not initialized - check network connection and SDK availability");
     }
   }
 
