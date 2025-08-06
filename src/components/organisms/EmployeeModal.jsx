@@ -24,11 +24,22 @@ const [formData, setFormData] = useState({
 
 useEffect(() => {
     if (employee) {
+      // Handle department lookup field properly
+      let departmentValue = "";
+      if (employee.department) {
+        // If department is a lookup object, use the Id
+        if (typeof employee.department === 'object' && employee.department.Id) {
+          departmentValue = employee.department.Id.toString();
+        } else {
+          departmentValue = employee.department.toString();
+        }
+      }
+      
       setFormData({
         name: employee.name || employee.Name || "",
         email: employee.email || "",
         role: employee.role || "",
-        department: employee.department || "",
+        department: departmentValue,
         phone: employee.phone || "",
         photoUrl: employee.photoUrl || "",
         status: employee.status || "active",
@@ -64,7 +75,7 @@ useEffect(() => {
 
 const [showDepartmentModal, setShowDepartmentModal] = useState(false);
 
-  const handleChange = (e) => {
+const handleChange = (e) => {
     const { name, value } = e.target;
     
     // Handle special case for "Add New Department" option
@@ -73,7 +84,9 @@ const [showDepartmentModal, setShowDepartmentModal] = useState(false);
       return;
     }
     
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // For department field, ensure we store the ID as string for lookup fields
+    const formValue = name === 'department' ? value : value;
+    setFormData(prev => ({ ...prev, [name]: formValue }));
   };
 
   const handleAddDepartment = () => {
@@ -173,20 +186,20 @@ const [showDepartmentModal, setShowDepartmentModal] = useState(false);
                   onChange={handleChange}
                   required
                 />
-                <Select
+<Select
                   label="Department"
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
                   required
                 >
-<option value="">Select Department</option>
+                  <option value="">Select Department</option>
                   <option value="__add_new__" className="text-primary-600 font-medium">
                     + Add New Department
                   </option>
                   {departments.map(dept => (
-                    <option key={dept.Id} value={dept.name}>
-                      {dept.name}
+                    <option key={dept.Id} value={dept.Id.toString()}>
+                      {dept.name || dept.Name}
                     </option>
                   ))}
                 </Select>
