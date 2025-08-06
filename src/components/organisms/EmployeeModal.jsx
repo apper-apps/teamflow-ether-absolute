@@ -150,8 +150,8 @@ const handleChange = (e) => {
                 >
                   <option value="">Select Department</option>
 {departments.map(dept => (
-                    <option key={dept.Id} value={dept.name || dept.Name}>
-                      {dept.name || dept.Name}
+                    <option key={dept.Id} value={dept.name}>
+                      {dept.name}
                     </option>
                   ))}
                 </Select>
