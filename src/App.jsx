@@ -98,14 +98,40 @@ useEffect(() => {
           target: '#authentication',
           clientId: import.meta.env.VITE_APPER_PROJECT_ID,
           view: 'both',
-          onSuccess: function (user) {
+onSuccess: function (user) {
             clearTimeout(initializationTimeout);
             setInitError(null);
             setIsInitialized(true);
+            
+            // Safe navigation function that checks router context
+            const safeNavigate = (path) => {
+              try {
+                if (navigate && typeof navigate === 'function') {
+                  navigate(path);
+                }
+              } catch (error) {
+                console.warn('Navigation attempted before router context ready:', error);
+                // Fallback to window.location for immediate navigation needs
+                if (path && typeof path === 'string') {
+                  window.location.href = path;
+                }
+              }
+            };
+            
             // CRITICAL: This exact currentPath logic must be preserved in all implementations
             // DO NOT simplify or modify this pattern as it ensures proper redirection flow
-            let currentPath = window.location.pathname + window.location.search;
-            let redirectPath = new URLSearchParams(window.location.search).get('redirect');
+            let currentPath = '';
+            let redirectPath = null;
+            
+            try {
+              // Safe pathname access with fallback
+              currentPath = (window.location?.pathname || '/') + (window.location?.search || '');
+              redirectPath = window.location?.search ? new URLSearchParams(window.location.search).get('redirect') : null;
+            } catch (error) {
+              console.warn('Location access error:', error);
+              currentPath = '/';
+            }
+            
             const isAuthPage = currentPath.includes('/login') || currentPath.includes('/signup') || 
                                currentPath.includes('/callback') || currentPath.includes('/error') || 
                                currentPath.includes('/prompt-password') || currentPath.includes('/reset-password');
@@ -113,40 +139,40 @@ useEffect(() => {
             if (user) {
               // User is authenticated
               if (redirectPath) {
-                navigate(redirectPath);
+                safeNavigate(redirectPath);
               } else if (!isAuthPage) {
                 if (!currentPath.includes('/login') && !currentPath.includes('/signup')) {
-                  navigate(currentPath);
+                  safeNavigate(currentPath);
                 } else {
-                  navigate('/');
+                  safeNavigate('/');
                 }
               } else {
-                navigate('/');
+                safeNavigate('/');
               }
               // Store user information in Redux
               dispatch(setUser(JSON.parse(JSON.stringify(user))));
             } else {
               // User is not authenticated
               if (!isAuthPage) {
-                navigate(
+                safeNavigate(
                   currentPath.includes('/signup')
-                    ? `/signup?redirect=${currentPath}`
+                    ? `/signup?redirect=${encodeURIComponent(currentPath)}`
                     : currentPath.includes('/login')
-                    ? `/login?redirect=${currentPath}`
+                    ? `/login?redirect=${encodeURIComponent(currentPath)}`
                     : '/login'
                 );
               } else if (redirectPath) {
                 if (
                   !['error', 'signup', 'login', 'callback', 'prompt-password', 'reset-password'].some((path) => currentPath.includes(path))
                 ) {
-                  navigate(`/login?redirect=${redirectPath}`);
+                  safeNavigate(`/login?redirect=${encodeURIComponent(redirectPath)}`);
                 } else {
-                  navigate(currentPath);
+                  safeNavigate(currentPath);
                 }
               } else if (isAuthPage) {
-                navigate(currentPath);
+                safeNavigate(currentPath);
               } else {
-                navigate('/login');
+                safeNavigate('/login');
               }
               dispatch(clearUser());
             }
