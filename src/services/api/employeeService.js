@@ -15,8 +15,14 @@ class EmployeeService {
       } catch (error) {
         console.error("Failed to initialize ApperClient:", error);
       }
-    } else {
+} else {
       console.warn("ApperSDK not available - employee service will not function");
+    }
+  }
+
+  _checkClient() {
+    if (!this.apperClient) {
+      throw new Error("ApperClient not initialized - check network connection and SDK availability");
     }
   }
 

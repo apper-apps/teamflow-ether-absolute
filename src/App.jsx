@@ -30,18 +30,35 @@ function AppContent() {
   
   // Initialize ApperUI once when the app loads
 useEffect(() => {
-    // Check if ApperSDK is available
-    if (!window.ApperSDK) {
-      console.error("ApperSDK not loaded - check network connection and script tag");
-      setIsInitialized(true);
+    // Enhanced SDK availability check with timeout
+    const checkSDKAvailability = () => {
+      if (!window.ApperSDK) {
+        console.error("ApperSDK not loaded - check network connection and script tag in index.html");
+        console.error("Verify that the CDN URL is accessible:", import.meta.env.VITE_APPER_SDK_CDN_URL);
+        setIsInitialized(true);
+        return false;
+      }
+      return true;
+    };
+
+    if (!checkSDKAvailability()) {
       return;
     }
-
-    try {
+try {
       const { ApperClient, ApperUI } = window.ApperSDK;
       
       if (!ApperClient || !ApperUI) {
         console.error("ApperSDK components not available - SDK may not be fully loaded");
+        console.error("Available SDK properties:", Object.keys(window.ApperSDK || {}));
+        setIsInitialized(true);
+        return;
+      }
+
+      // Verify environment variables are available
+      if (!import.meta.env.VITE_APPER_PROJECT_ID || !import.meta.env.VITE_APPER_PUBLIC_KEY) {
+        console.error("Missing required environment variables - check .env file");
+        console.error("VITE_APPER_PROJECT_ID:", import.meta.env.VITE_APPER_PROJECT_ID ? "✓" : "✗");
+        console.error("VITE_APPER_PUBLIC_KEY:", import.meta.env.VITE_APPER_PUBLIC_KEY ? "✓" : "✗");
         setIsInitialized(true);
         return;
       }
@@ -112,8 +129,11 @@ useEffect(() => {
           setIsInitialized(true);
         }
       });
-    } catch (error) {
+} catch (error) {
       console.error("Failed to initialize ApperSDK:", error);
+      if (error.name === 'NetworkError' || error.message.includes('Network')) {
+        console.error("Network connectivity issue - check internet connection and CDN availability");
+      }
       setIsInitialized(true);
     }
   }, []);// No props and state should be bound
